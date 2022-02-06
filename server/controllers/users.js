@@ -1,12 +1,12 @@
 module.exports = {
-    signUp: async(req, res, next) => {
+    signUp: async (req, res, next) => {
         console.log("signup")
     },
-    signIn: async(req, res, next) => {
+    signIn: async (req, res, next) => {
         console.log("signIn")
     },
-    secret: async(req, res, next) => {
-        console.log("secret")
+    secret: async (req, res, next) => {
+        res.send("send the secret")
     }
 
 }

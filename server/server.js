@@ -15,6 +15,10 @@ const dbo = require("./db/connection");
 //Routes
 app.use('/users', require('./routes/users'))
 
+app.get('/foo', function (req, res) {
+    res.send("triggered foo")
+})
+
 app.listen(port, () => {
     // perform a database connection when server starts
     dbo.connectToServer(function (err) {

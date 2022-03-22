@@ -1,6 +1,8 @@
 const router = require('express').Router();
 
-const User = require('../models/user.model');
+const UserModel = require('../models/user.model');
+const { hashSync, compareSync } = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 router.get('/profile', async(req, res, next) => {
     console.log("req.user", req.user)
@@ -35,10 +37,38 @@ router.post('/register', async(req, res, next) => {
 })
 
 
-router.post('/login', async(req, res, next) => {
-    res.send("Login")
-})
+router.post('/login', (req, res) => {
+    UserModel.findOne({ email: req.body.email }).then(user => {
+        if (!user) {
+            return res.status(401).send({
+                success: false,
+                message: "Could not find the user."
+            })
+        }
 
+        //Incorrect password
+        if (!compareSync(req.body.password, user.password)) {
+            return res.status(401).send({
+                success: false,
+                message: "Incorrect password"
+            })
+        }
+
+        const payload = {
+            email: user.email,
+            id: user._id
+        }
+
+        const token = jwt.sign(payload, "Random string", { expiresIn: "1d" })
+
+        return res.status(200).send({
+            success: true,
+            message: "Logged in successfully!",
+            token: "Bearer " + token
+        })
+
+    })
+})
 
 
 module.exports = router

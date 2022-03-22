@@ -17,7 +17,7 @@ router.post('/register', async(req, res, next) => {
         const { email } = req.body;
         const doesExist = await User.findOne({ email });
         if (doesExist) {
-            req.flash('warning', 'Username/email already exists');
+            res.send({ message: "user already exist" })
             res.redirect('/auth/register');
             return;
         }
